@@ -1,0 +1,10 @@
+#Ignoring Rhistory file
+.Rhistory
+*.pyc
+*.zip
+.vscode
+static/uploads/*
+!static/uploads/.gitkeep 
+test/*.csv
+test/*.txt
+.gitignore

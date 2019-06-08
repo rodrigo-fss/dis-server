@@ -1,0 +1,47 @@
+version: '3'
+services:   
+  python:
+    container_name: dis_rest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - POSTGRES_PORT=5423
+      - POSTGRES_USER=dis_rest
+      - POSTGRES_PASSWORD=E!bS{c5CS4Zsm#
+    ports: 
+      - "5000:5000"
+    volumes:
+      - ./:/usr/local/src/
+    tty: true
+    depends_on:
+      - redis
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile_celery
+    environment:
+      - POSTGRES_PORT=5423
+      - POSTGRES_USER=dis_rest
+      - POSTGRES_PASSWORD=E!bS{c5CS4Zsm#
+    volumes:
+      - ./:/usr/local/src/
+    depends_on:
+      - redis
+      - python
+    links:
+      - redis
+      - python
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+  postgres:
+    image: postgres
+    volumes: 
+      - ./db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=dis_rest
+      - POSTGRES_PASSWORD=E!bS{c5CS4Zsm#
+    ports:
+      - "5423:5432"
