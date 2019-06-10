@@ -29,7 +29,7 @@ def make_celery(app):
 def make_db_connection():
     connection = psycopg2.connect(user=os.environ['POSTGRES_USER'],
                                   password=os.environ['POSTGRES_PASSWORD'],
-                                  host="localhost",
+                                  host="postgres",
                                   port=os.environ['POSTGRES_PORT'],
                                   database="postgres")
-    return connection.cursor()
+    return connection

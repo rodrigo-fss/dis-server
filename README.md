@@ -2,7 +2,8 @@
 
 ## How to Run Properly
 
-This is a Python app for bancary statement info extraction.
+This project is both an REST API and a matrix to image conversor.
+The database is also hostded under the same docker-compose file
 
 [Docker](https://www.docker.com/) is required for all environments.
 
@@ -19,25 +20,67 @@ This is a Python app for bancary statement info extraction.
    *If running in local or staging:*
     
         docker-compose up
-
-2. Access `http://0.0.0.0:5000/` and use the form to convert a bank statement to a csv
-
-### How it's Architectured:
     
-1. Flask handle the web part os the application, manananging routes and functions related to
-each one of the pages
-2. The user input receives a pdf file and a bank option that is related to a bank templante
-3. Bank templates handle each of the steps between the raw pdf and the converted csv passing
-information through module functions
-4. Specific transformation related to a bank are in the `bank_template` folder, the `common_template`
-folder stores the functions that are used in more than one bank
-5. The ideia is to make code reusable (modules) and readable (templates) 
+### Understand the application:
 
-### Testing
+1. Flask handle the web part os the application, manananging routes and the io to bank
+2. Celery is used to async heavy tasks when needed
+3. You can find the Flask + Celery functions in the `server.py` file
+4. You can better understand the code by reading the introduction of each tool
+in its documentation of [Flask](http://flask.pocoo.org/docs/1.0/quickstart/#a-minimal-application) and [Celery](http://docs.celeryproject.org/en/latest/getting-started/introduction.html)
 
-To trigger the automated tests you should get into the container 
-`docker exec -it bcredi-doc-extraction /bin/sh` 
-and run pytest inside test folder
-`cd test;pytest`
+### REST endpoints:
 
-the test folder also holds the `test/acc_test.py` file that could be debbuged if its the case
+**/create_user ['POST']**
+this endpoint will check if any user with thar user name is already in the database,
+if it`s not, a new user will be created.
+
+expected input:
+```
+{   
+	"username": "$nome_do_usuario",
+	"password": "$senha_do_usuario"
+}
+```
+
+**/check_user ['POST']**
+This endpoint will check if any user with that user name is already in the database,
+if it is, the stored password will compared with the sent one, if they mach a sucess
+message will be returned.
+
+expected input:
+```
+{   
+	"username": "$nome_do_usuario",
+	"password": "$senha_do_usuario"
+}
+```
+
+**/create_image ['POST']**
+This endpoint will start a new async task and will return the new task id
+expected input 
+```
+{   
+	"matrix": "[[8 9 9],[7 10 7],[10 2 10]]"
+}
+```
+
+**/pull_state/<task_id> ['GET']**
+This endpoint will expect a task id and will return the task status.
+
+
+### REST return
+If the seded request fails the return will be a json with an 'error' value
+you may use the error value to provide some feedback to the user 
+``` 
+{
+    "error": "username already in use"
+}
+```
+
+If the request succeed the return wil be a 'sucess' value
+```
+{
+    "sucess": "right password"
+}
+```

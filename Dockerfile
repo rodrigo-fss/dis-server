@@ -1,10 +1,10 @@
-FROM tesseractshadow/tesseract4re
+FROM python:3.7.3-slim-stretch
 
 RUN apt-get update
-RUN apt-get install -y python-psycopg2 software-properties-common
-RUN apt-get install -y python3.6 python3-pip poppler-utils 
-RUN apt install -y default-jdk
-RUN pip3 install redis celery requests psycopg2
+RUN apt-get install -y software-properties-common poppler-utils
+RUN apt-get update
+RUN apt-get install -y  python-psycopg2 libpq-dev
+RUN pip3 install redis celery requests psycopg2-binary
 RUN pip3 install numpy flask flask_wtf gunicorn
 RUN pip3 install pandas --upgrade pip
 
