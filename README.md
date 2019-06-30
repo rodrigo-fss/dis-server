@@ -39,6 +39,7 @@ expected input:
 ```
 {   
 	"username": "$nome_do_usuario",
+    "email": "$email_do_usuario",
 	"password": "$senha_do_usuario"
 }
 ```
@@ -61,7 +62,8 @@ This endpoint will start a new async task and will return the new task id
 expected input 
 ```
 {   
-	"matrix": "[[8 9 9],[7 10 7],[10 2 10]]"
+    "user_id": "$id_do_ususario"
+	"matrix": "8 9 9; 7 10 7; 10 2 10"
 }
 ```
 
@@ -82,5 +84,6 @@ If the request succeed the return wil be a 'sucess' value
 ```
 {
     "sucess": "right password"
+    "user_id": "$id_do_usuario"
 }
 ```
