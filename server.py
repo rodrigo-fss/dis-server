@@ -90,6 +90,27 @@ def pull_state(task_id):
     return jsonify(response)
 
 
+@application.route('/get_images/<user_id>', methods=['GET'])
+def get_images(user_id):
+    get_images_query = """ SELECT * FROM dis.images
+                            WHERE user_id = '{}' """.format(user_id)
+    cursor.execute(get_images_query)
+    images_data = cursor.fetchall()
+
+    list_of_images = []
+    for image_data in images_data:
+        images = {}
+        images['image_id'] = image_data[0]
+        images['user_id'] = image_data[1]
+        images['image'] = image_data[2].replace('\n', ',')
+        images['image_size'] = image_data[3]
+        images['init_time'] = image_data[4]
+        images['finish_time'] = image_data[5]
+        list_of_images.append(images)
+
+    return jsonify(list_of_images)
+
+
 @celery.task(name='server.long_running_task')
 def long_running_task(user, matrix):
     init_time = datetime.datetime.now()

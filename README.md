@@ -70,6 +70,9 @@ expected input
 **/pull_state/<task_id> ['GET']**
 This endpoint will expect a task id and will return the task status.
 
+**/get_images/<user_id> ['GET']**
+This endpoint will expect a user id and will return the user's images.
+
 
 ### REST return
 If the seded request fails the return will be a json with an 'error' value
