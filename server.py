@@ -55,15 +55,18 @@ def check_user():
     username = request.json['username']
     password = request.json['password']
 
-    select_user_query = """ SELECT password FROM dis.users
+    select_user_query = """ SELECT password, id FROM dis.users
                             WHERE name = '{}' """.format(username)
 
     cursor.execute(select_user_query)
-    correct_password = cursor.fetchall()[0][0]
+    response = cursor.fetchall()
+    correct_password = response[0][0]
+    user_id = response[0][1]
 
     if correct_password:
         if check_password_hash(correct_password, password):
-            return jsonify({'sucess': 'right password'})  # return id
+            return jsonify({'sucess': 'right password',
+                            'user_id': '{}'.format(user_id)})
         else:
             return jsonify({'error': 'passwords dont match'})
     else:
