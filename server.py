@@ -60,8 +60,12 @@ def check_user():
 
     cursor.execute(select_user_query)
     response = cursor.fetchall()
-    correct_password = response[0][0]
-    user_id = response[0][1]
+
+    try:
+        correct_password = response[0][0]
+        user_id = response[0][1]
+    except:
+        return jsonify({'error': 'user not found'})
 
     if correct_password:
         if check_password_hash(correct_password, password):
@@ -101,16 +105,18 @@ def get_images(user_id):
     images_data = cursor.fetchall()
 
     list_of_images = []
-    for image_data in images_data:
-        images = {}
-        images['image_id'] = image_data[0]
-        images['user_id'] = image_data[1]
-        images['image'] = image_data[2].replace('\n', ',')
-        images['image_size'] = image_data[3]
-        images['init_time'] = image_data[4]
-        images['finish_time'] = image_data[5]
-        list_of_images.append(images)
-
+    try:
+        for image_data in images_data:
+            images = {}
+            images['image_id'] = image_data[0]
+            images['user_id'] = image_data[1]
+            images['image'] = image_data[2].replace('\n', ',')
+            images['image_size'] = image_data[3]
+            images['init_time'] = image_data[4]
+            images['finish_time'] = image_data[5]
+            list_of_images.append(images)
+    except:
+        jsonify({"error": "there are no images for this user"})
     return jsonify(list_of_images)
 
 

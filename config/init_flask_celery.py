@@ -31,5 +31,5 @@ def make_db_connection():
                                   password=os.environ['POSTGRES_PASSWORD'],
                                   host="postgres",
                                   port=os.environ['POSTGRES_PORT'],
-                                  database="postgres")
+                                  database="dis_rest")
     return connection

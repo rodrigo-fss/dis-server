@@ -8,3 +8,4 @@ static/uploads/*
 test/*.csv
 test/*.txt
 credentials/*
+dis.pem
